@@ -1,9 +1,13 @@
 import os
 import json
 import csv
+from datetime import datetime
 
 # choose your delimiter below
 delimiter =';'
+
+# edit your expected datetime format below see http://strftime.org/
+frmt = '%Y-%m-%d %H:%M:%S'
 
 # add your aws profiles below
 profiles = ["profile-name-1","profile-name-2"]
@@ -17,8 +21,8 @@ regions = ['eu-central-1',"eu-west-1"]
 # data to put in the output csv see https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html to add params
 params = ["InstanceId","InstanceName","AMI","State","LaunchTime"]
 
-def describe_all_instances(profiles,regions,params,delimiter):
-	print ("Getting all  instances")
+def describe_all_instances(profiles,regions,params,delimiter,frmt):
+	print ("Getting all instances")
 	os.chdir(os.path.join(path,'aws-instances-details/all-instances'))
 	header = ["Profile","Region"]
 	for param in params:
@@ -39,7 +43,9 @@ def describe_all_instances(profiles,regions,params,delimiter):
 					try:
 						for listInstance in jsonfile:
 							for instance in listInstance:
-								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],instance[4]]
+								convert_datetime_object = datetime.strptime(str(instance[4]),'%Y-%m-%dT%H:%M:%S.%fZ')
+								pretty_datetime_object = convert_datetime_object.strftime(frmt)
+								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],pretty_datetime_object]
 								csv_writer.writerow(json_parsed)
 					except IndexError:
 						print ("There are no existing instances for {0} account on region {1}".format(profile,region))
@@ -47,7 +53,7 @@ def describe_all_instances(profiles,regions,params,delimiter):
 		print ("Deleting all json file from folder")
 		[os.remove(json) for json in os.listdir(os.path.join(path,'aws-instances-details/all-instances')) if json[-4:] == "json"]
 
-def describe_stopped_instances(profiles,regions,params,delimiter):
+def describe_stopped_instances(profiles,regions,params,delimiter,frmt):
 	print ("Getting all stopped instances")
 	os.chdir(os.path.join(path,'aws-instances-details/stopped-instances'))
 	header = ["Profile","Region"]
@@ -68,7 +74,9 @@ def describe_stopped_instances(profiles,regions,params,delimiter):
 					try:
 						for listInstance in jsonfile:
 							for instance in listInstance:
-								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],instance[4]]
+								convert_datetime_object = datetime.strptime(str(instance[4]),'%Y-%m-%dT%H:%M:%S.%fZ')
+								pretty_datetime_object = convert_datetime_object.strftime(frmt)
+								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],pretty_datetime_object]
 								csv_writer.writerow(json_parsed)
 					except IndexError:
 						print ("There are no existing instances for {0} account on region {1}".format(profile,region))
@@ -76,7 +84,7 @@ def describe_stopped_instances(profiles,regions,params,delimiter):
 		print ("Deleting all json file from folder")
 		[os.remove(json) for json in os.listdir(os.path.join(path,'aws-instances-details/all-instances')) if json[-4:] == "json"]
 		
-def describe_running_instances(profiles,regions,params,delimiter):
+def describe_running_instances(profiles,regions,params,delimiter,frmt):
 	print ("Getting all running instances")
 	os.chdir(os.path.join(path,'aws-instances-details/running-instances'))
 	header = ["Profile","Region"]
@@ -97,7 +105,9 @@ def describe_running_instances(profiles,regions,params,delimiter):
 					try:
 						for listInstance in jsonfile:
 							for instance in listInstance:
-								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],instance[4]]
+								convert_datetime_object = datetime.strptime(str(instance[4]),'%Y-%m-%dT%H:%M:%S.%fZ')
+								pretty_datetime_object = convert_datetime_object.strftime(frmt)
+								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],pretty_datetime_object]
 								csv_writer.writerow(json_parsed)
 					except IndexError:
 						print ("There are no existing instances for {0} account on region {1}".format(profile,region))

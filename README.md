@@ -28,3 +28,5 @@ The two lists <regions> & <profiles> must follow the below naming rule:
 
 If you get this error json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 means that the awscli command wasn't executed properly. Check your credentials file to see if the profile is active and is working
+
+Sometimes not all json files will be deleted
