@@ -125,7 +125,7 @@ if __name__ == "__main__":
 	except:
 		print("Folder already exists")
 
-	describe_all_instances(profiles,regions,params)
-	describe_running_instances(profiles,regions,params)
-	describe_stopped_instances(profiles,regions,params)
+	describe_all_instances(profiles,regions,params,delimiter,frmt)
+	describe_running_instances(profiles,regions,params,delimiter,frmt)
+	describe_stopped_instances(profiles,regions,params,delimiter,frmt)
 

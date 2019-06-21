@@ -1,5 +1,5 @@
 # monitor-aws-ec2-instances
-This is a small and modest python script to output in a csv file all your aws ec2 instances status & details
+This is a small (slow) and modest python script to output in a csv file all your aws ec2 instances status & details
 
 # 1) Install awscli package
 
@@ -29,4 +29,9 @@ The two lists <regions> & <profiles> must follow the below naming rule:
 If you get this error json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 means that the awscli command wasn't executed properly. Check your credentials file to see if the profile is active and is working
 
-Sometimes not all json files will be deleted
+Sometimes not all json files will be deleted if the script fails before the end
+
+# 4) To do:
+
+Deal with the erro below with the IndexError that can occur sometimes
+Manage when there are no instances on the region to gain some time.
