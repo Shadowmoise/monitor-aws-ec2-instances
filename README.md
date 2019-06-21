@@ -33,5 +33,6 @@ Sometimes not all json files will be deleted if the script fails before the end
 
 # 4) To do:
 
+write documentation
 Deal with the erro below with the IndexError that can occur sometimes
 Manage when there are no instances on the region to gain some time.
