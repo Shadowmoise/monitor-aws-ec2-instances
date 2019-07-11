@@ -5,7 +5,7 @@ delimiter =';'
 frmt = '%Y-%m-%d %H:%M:%S'
 
 # add your aws profiles below
-profiles = ["193549639160_op_LMS"]
+profiles = ["profile-name-1","profile-name-2"]
 
 # add your regions below see https://docs.aws.amazon.com/general/latest/gr/rande.html
 regions = ["eu-west-1",'eu-central-1']
