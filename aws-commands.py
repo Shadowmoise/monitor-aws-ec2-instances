@@ -2,24 +2,7 @@ import os
 import json
 import csv
 from datetime import datetime
-
-# choose your delimiter below
-delimiter =';'
-
-# edit your expected datetime format below see http://strftime.org/
-frmt = '%Y-%m-%d %H:%M:%S'
-
-# add your aws profiles below
-profiles = ["profile-name-1","profile-name-2"]
-
-# add your regions below see https://docs.aws.amazon.com/general/latest/gr/rande.html
-regions = ['eu-central-1',"eu-west-1"]
-
-#example with all regions
-# regions = ["us-east-1","us-east-2","us-west-1","us-west-2","ca-central-1","eu-central-1","eu-west-1","eu-west-2","eu-west-3","eu-north-1","ap-east-1","ap-northeast-1","ap-northeast-2","ap-southeast-1","ap-southeast-2","ap-south-1","sa-east-1"]
-
-# data to put in the output csv see https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html to add params
-params = ["InstanceId","InstanceName","AMI","State","LaunchTime"]
+from awsconf import frmt, delimiter, params, profiles, regions
 
 def describe_all_instances(profiles,regions,params,delimiter,frmt):
 	print ("Getting all instances")
@@ -47,8 +30,9 @@ def describe_all_instances(profiles,regions,params,delimiter,frmt):
 								pretty_datetime_object = convert_datetime_object.strftime(frmt)
 								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],pretty_datetime_object]
 								csv_writer.writerow(json_parsed)
-					except IndexError:
-						print ("There are no existing instances for {0} account on region {1}".format(profile,region))
+					except (IndexError, json.decoder.JSONDecodeError) as e:
+						print (e)
+						print ("There are no existing instances or you don't have the rights for {0} account on region {1}".format(profile,region))
 						pass
 		print ("Deleting all json file from folder")
 		[os.remove(json) for json in os.listdir(os.path.join(path,'aws-instances-details/all-instances')) if json[-4:] == "json"]
@@ -126,6 +110,6 @@ if __name__ == "__main__":
 		print("Folder already exists")
 
 	describe_all_instances(profiles,regions,params,delimiter,frmt)
-	describe_running_instances(profiles,regions,params,delimiter,frmt)
-	describe_stopped_instances(profiles,regions,params,delimiter,frmt)
+	# describe_running_instances(profiles,regions,params,delimiter,frmt)
+	# describe_stopped_instances(profiles,regions,params,delimiter,frmt)
 
