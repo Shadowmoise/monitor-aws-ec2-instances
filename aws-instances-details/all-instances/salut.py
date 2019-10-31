@@ -1,1 +1,0 @@
-salut = 'coucou'

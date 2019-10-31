@@ -2,7 +2,9 @@ import os
 import json
 import csv
 from datetime import datetime
-from awsconf import frmt, delimiter, params, profiles, regions
+
+from config import delimiter,frmt,profiles,regions,params
+
 
 def describe_all_instances(profiles,regions,params,delimiter,frmt):
 	print ("Getting all instances")
@@ -30,10 +32,9 @@ def describe_all_instances(profiles,regions,params,delimiter,frmt):
 								pretty_datetime_object = convert_datetime_object.strftime(frmt)
 								json_parsed = [profile,region,instance[0],instance[1][0],instance[2],instance[3]["Name"],pretty_datetime_object]
 								csv_writer.writerow(json_parsed)
-					except (IndexError, json.decoder.JSONDecodeError) as e:
-						print (e)
-						print ("There are no existing instances or you don't have the rights for {0} account on region {1}".format(profile,region))
-						pass
+					except IndexError:
+						print ("There are no existing instances for {0} account on region {1}".format(profile,region))
+						continue
 		print ("Deleting all json file from folder")
 		[os.remove(json) for json in os.listdir(os.path.join(path,'aws-instances-details/all-instances')) if json[-4:] == "json"]
 
@@ -64,7 +65,7 @@ def describe_stopped_instances(profiles,regions,params,delimiter,frmt):
 								csv_writer.writerow(json_parsed)
 					except IndexError:
 						print ("There are no existing instances for {0} account on region {1}".format(profile,region))
-						pass
+						continue
 		print ("Deleting all json file from folder")
 		[os.remove(json) for json in os.listdir(os.path.join(path,'aws-instances-details/all-instances')) if json[-4:] == "json"]
 		
@@ -95,7 +96,7 @@ def describe_running_instances(profiles,regions,params,delimiter,frmt):
 								csv_writer.writerow(json_parsed)
 					except IndexError:
 						print ("There are no existing instances for {0} account on region {1}".format(profile,region))
-						pass
+						continue
 		print ("Deleting all json file from folder")
 		[os.remove(json) for json in os.listdir(os.path.join(path,'aws-instances-details/all-instances')) if json[-4:] == "json"]
 	
@@ -108,8 +109,7 @@ if __name__ == "__main__":
 		os.mkdir(os.path.join(path, "aws-instances-details/all-instances"))	
 	except:
 		print("Folder already exists")
-
+		
 	describe_all_instances(profiles,regions,params,delimiter,frmt)
 	# describe_running_instances(profiles,regions,params,delimiter,frmt)
 	# describe_stopped_instances(profiles,regions,params,delimiter,frmt)
-
